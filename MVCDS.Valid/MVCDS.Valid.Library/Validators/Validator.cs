@@ -37,6 +37,12 @@ namespace MVCDS.Valid.Library.Validators
             return this;
         }
 
+        public IValidator<T> Fail(Func<T, bool> callback)
+        {
+            Func<T, bool> reverse = s => !callback(s);
+            return Succeed(reverse);
+        }
+
         public IValidator<T> Prepare(Func<T, T> callback)
         {
             Transformation<T> assertion = new Transformation<T>(callback);

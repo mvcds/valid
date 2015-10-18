@@ -10,9 +10,9 @@ namespace MVCDS.Valid.Test.Unit
         public void Compose_A_Rule_Using_Functions()
         {
            IValidator<string> validator = new Validator<string>("password's length")
-                .Succeed(s => s != null)
+                .Fail(s => s == null)
                 .Prepare(s => s.Trim())
-                .Succeed(s => !string.IsNullOrWhiteSpace(s))
+                .Fail(s => string.IsNullOrWhiteSpace(s))
                 .Succeed(s => s.Length >= 3 && s.Length <= 16);
 
             string _null = null,
