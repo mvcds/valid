@@ -6,6 +6,7 @@ namespace MVCDS.Valid.Library.Validators
     {
         string Name { get; }
         IValidator<T> Succeed(Func<T, bool> callback);
-        bool Validate(T value);
+        IValidator<T> Prepare(Func<T, T> callback);
+        bool Validate(ref T value);
     }
 }

@@ -7,7 +7,7 @@ namespace MVCDS.Valid.Library.Validators
 {
     public class Validator<T> : IValidator<T>
     {
-        List<Rule<T>> rules = new List<Rule<T>>();
+        List<IStep> steps = new List<IStep>();
 
         public Validator(string name)
         {
@@ -32,14 +32,32 @@ namespace MVCDS.Valid.Library.Validators
 
         public IValidator<T> Succeed(Func<T, bool> callback)
         {
-            Rule<T> rule = new Rule<T>(callback);
-            rules.Add(rule);
+            Assertion<T> assertion = new Assertion<T>(callback);
+            steps.Add(assertion);
             return this;
         }
 
-        public bool Validate(T value)
+        public IValidator<T> Prepare(Func<T, T> callback)
         {
-            return rules.All(p => p.Validate(value));
+            Transformation<T> assertion = new Transformation<T>(callback);
+            steps.Add(assertion);
+            return this;
+        }
+
+        public bool Validate(ref T value)
+        {
+            foreach(IStep step in steps)
+            {
+                Assertion<T> rule = step as Assertion<T>;
+                if (rule == null)
+                {
+                    Transformation<T> transform = step as Transformation<T>;
+                    value = transform.Perform(value);
+                }
+                else if (!rule.Validate(value))
+                    return false;
+            }
+            return true;
         }
     }
 }

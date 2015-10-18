@@ -2,16 +2,16 @@
 
 namespace MVCDS.Valid.Library.Rules
 {
-    internal class Rule<T>
+    internal class Transformation<T>: IStep
     {
-        private Func<T, bool> callback;
+        private Func<T, T> callback;
 
-        internal Rule(Func<T, bool> callback)
+        internal Transformation(Func<T, T> callback)
         {
             this.callback = callback;
         }
 
-        internal bool Validate(T value)
+        internal T Perform(T value)
         {
             return callback(value);
         }
