@@ -1,11 +1,11 @@
 ﻿using System;
-using MVCDS.Valid.Library.Rules;
 
 namespace MVCDS.Valid.Library.Validators
 {
     public interface IValidator<T>
     {
-        void AddRule(Func<T, bool> callback);
+        string Name { get; }
+        IValidator<T> Succeed(Func<T, bool> callback);
         bool Validate(T value);
     }
 }

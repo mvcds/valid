@@ -2,7 +2,7 @@
 
 namespace MVCDS.Valid.Library.Rules
 {
-    public class Rule<T>
+    internal class Rule<T>
     {
         private Func<T, bool> callback;
 
@@ -13,14 +13,7 @@ namespace MVCDS.Valid.Library.Rules
 
         internal bool Validate(T value)
         {
-            try
-            {
-                return callback(value);
-            }
-            catch
-            {
-                return false;
-            }
+            return callback(value);
         }
     }
 }

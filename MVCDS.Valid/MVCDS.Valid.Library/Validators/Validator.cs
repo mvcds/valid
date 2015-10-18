@@ -7,17 +7,39 @@ namespace MVCDS.Valid.Library.Validators
 {
     public class Validator<T> : IValidator<T>
     {
-        List<Rule<T>> _rules = new List<Rule<T>>();
+        List<Rule<T>> rules = new List<Rule<T>>();
 
-        public void AddRule(Func<T, bool> callback)
+        public Validator(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException();
+
+            name = name.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException();
+
+            _name = name;
+        }
+
+        private string _name;
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+        }
+
+        public IValidator<T> Succeed(Func<T, bool> callback)
         {
             Rule<T> rule = new Rule<T>(callback);
-            _rules.Add(rule);
+            rules.Add(rule);
+            return this;
         }
 
         public bool Validate(T value)
         {
-            return _rules.All(p => p.Validate(value));
+            return rules.All(p => p.Validate(value));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using lib = MVCDS.Valid.Library;
+using MVCDS.Valid.Library.Validators;
 
 namespace MVCDS.Valid.Test.Unit
 {
@@ -7,11 +7,13 @@ namespace MVCDS.Valid.Test.Unit
     public class Get_Results
     {
         [TestMethod]
-        public void Use_A_Function()
+        public void Compose_A_Rule_Using_Functions()
         {
-            lib.Validators.Validator<string> validator = new lib.Validators.Validator<string>();
-            validator.AddRule(s => s.Length >= 3 && s.Length <= 16);
-
+           IValidator<string> validator = new Validator<string>("Password's length")
+                .Succeed(s => s != null)
+                .Succeed(s => !string.IsNullOrWhiteSpace(s))
+                .Succeed(s => s.Length >= 3 && s.Length <= 16);
+            
             Assert.AreEqual(validator.Validate(null), false);
             Assert.AreEqual(validator.Validate(new string('a', 1)), false);
             Assert.AreEqual(validator.Validate(new string('a', 5)), true);
