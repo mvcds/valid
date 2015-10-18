@@ -45,6 +45,7 @@
     <Compile Include="Rules\Assertion.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Rules\Transformation.cs" />
+    <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Validators\Validator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

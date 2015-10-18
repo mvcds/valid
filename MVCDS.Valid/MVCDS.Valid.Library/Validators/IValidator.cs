@@ -5,9 +5,17 @@ namespace MVCDS.Valid.Library.Validators
     public interface IValidator<T>
     {
         string Name { get; }
-        IValidator<T> Succeed(Func<T, bool> callback);
-        IValidator<T> Fail(Func<T, bool> callback);
-        IValidator<T> Prepare(Func<T, T> callback);
-        bool Validate(ref T value);
+        bool Validate(T value);
+    }
+
+    public interface IContableValidator<T> : IValidator<T>
+    {
+        int? Minimum { get; }
+        int? Maximum { get; }
+    }
+
+    public interface IOptionalValidator<T> : IValidator<T>
+    {
+        bool Optional { get; }
     }
 }

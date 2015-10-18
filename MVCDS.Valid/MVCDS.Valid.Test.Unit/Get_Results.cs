@@ -9,21 +9,27 @@ namespace MVCDS.Valid.Test.Unit
         [TestMethod]
         public void Compose_A_Rule_Using_Functions()
         {
-           IValidator<string> validator = new Validator<string>("password's length")
-                .Fail(s => s == null)
-                .Prepare(s => s.Trim())
-                .Fail(s => string.IsNullOrWhiteSpace(s))
-                .Succeed(s => s.Length >= 3 && s.Length <= 16);
+            Validator<string> validator = new Validator<string>("password's length")
+                 .Fail(s => s == null)
+                 .Prepare(s => s.Trim())
+                 .Fail(s => string.IsNullOrWhiteSpace(s))
+                 .Succeed(s => s.Length >= 3 && s.Length <= 16);
 
-            string _null = null,
-                _under = new string('a', 1) + "  ",
-                _in = new string('a', 5),
-                _over = new string('a', 25);
+            Assert.IsFalse(validator.Validate(null));
+            Assert.IsFalse(validator.Validate(new string('a', 1)));
+            Assert.IsTrue(validator.Validate(new string('a', 5)));
+            Assert.IsFalse(validator.Validate(new string('a', 25)));
+        }
 
-            Assert.AreEqual(validator.Validate(ref _null), false);
-            Assert.AreEqual(validator.Validate(ref _under), false);
-            Assert.AreEqual(validator.Validate(ref _in), true);
-            Assert.AreEqual(validator.Validate(ref _over), false);
+        [TestMethod]
+        public void Validate_As_String()
+        {
+            StringValidator validator = new StringValidator("password's length", 3, 16, false);
+
+            Assert.IsFalse(validator.Validate(null));
+            Assert.IsFalse(validator.Validate(new string('a', 1)));
+            Assert.IsTrue(validator.Validate(new string('a', 5)));
+            Assert.IsFalse(validator.Validate(new string('a', 25)));
         }
     }
 }

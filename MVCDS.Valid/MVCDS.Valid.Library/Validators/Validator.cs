@@ -11,14 +11,12 @@ namespace MVCDS.Valid.Library.Validators
 
         public Validator(string name)
         {
-            if (name == null)
-                throw new ArgumentNullException();
+            StringValidator validator = new StringValidator(name);
 
-            name = name.Trim();
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException();
+            if (!validator.Validate(name))
+                throw new ArgumentException("Invalid name for validator");
 
-            _name = name;
+            _name = name.Trim();
         }
 
         private string _name;
@@ -30,27 +28,27 @@ namespace MVCDS.Valid.Library.Validators
             }
         }
 
-        public IValidator<T> Succeed(Func<T, bool> callback)
+        public Validator<T> Succeed(Func<T, bool> callback)
         {
             Assertion<T> assertion = new Assertion<T>(callback);
             steps.Add(assertion);
             return this;
         }
 
-        public IValidator<T> Fail(Func<T, bool> callback)
+        public Validator<T> Fail(Func<T, bool> callback)
         {
             Func<T, bool> reverse = s => !callback(s);
             return Succeed(reverse);
         }
 
-        public IValidator<T> Prepare(Func<T, T> callback)
+        public Validator<T> Prepare(Func<T, T> callback)
         {
             Transformation<T> assertion = new Transformation<T>(callback);
             steps.Add(assertion);
             return this;
         }
 
-        public bool Validate(ref T value)
+        public bool Validate(T value)
         {
             foreach(IStep step in steps)
             {
